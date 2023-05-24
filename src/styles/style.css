@@ -1,0 +1,59 @@
+/* * {
+  box-sizing: border-box;
+} */
+
+body {
+  background-color: #DDDDDD;
+
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000000;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 22px;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+h4 {
+  color: #777777;
+}
+
+/* button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 30px;
+  min-width: 120px;
+  min-height: 32px;
+  
+  font-weight: 700;
+  font-size: 16px;
+} */
+
+/* input {
+  background: #FFFFFF;
+  border: 1px solid #777777;
+  border-radius: 8px;
+  padding: 8px 11.2px;
+  width: 100%;
+} */
+
+/* input::placeholder {
+  font-size: 14px;
+  color: #CCCCCC;
+} */
