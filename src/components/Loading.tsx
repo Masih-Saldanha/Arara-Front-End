@@ -1,29 +1,15 @@
 import React from "react";
 import { Oval } from "react-loader-spinner";
-import styled from "styled-components";
 
 function Loading(props: { message: string; }) {
     const { message } = props;
 
     return (
-        <Load>
+        <div className="d-flex flex-column align-items-center mt-5">
             <Oval color="#333333" secondaryColor='#6D6D6D' height={36} width={36} />
-            <NoPosts>{message}</NoPosts>
-        </Load>
+            <h2 className="mt-3 mb-3 text-center text-muted">{message}</h2>
+        </div>
     )
 };
-
-const Load = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 52px;
-`
-
-const NoPosts = styled.h2`
-    margin: 16px 0;
-    text-align: center;
-    color: #6D6D6D;
-`
 
 export default Loading;
