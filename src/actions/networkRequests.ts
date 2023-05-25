@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-const BASE_URL = "https://certi-amazonia-chat.onrender.com";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function getAxiosConfig(token: string) {
     return {

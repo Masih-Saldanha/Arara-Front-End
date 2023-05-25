@@ -37,12 +37,9 @@ function SignInSquare() {
             .signIn(signInUsername, signInPassword)
             .then((response) => {
                 dispatch(storeToken(response.data));
-                console.log(response.data);
-                alert(response.data);
                 navigate("/main");
             })
             .catch((e) => {
-                console.log(e.response.data);
                 alert(e.response.data);
             })
     };

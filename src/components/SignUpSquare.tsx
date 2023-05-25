@@ -36,12 +36,10 @@ function SignUpSquare() {
         networkRequests
             .signUp(signUpUsername, signUpPassword)
             .then((response) => {
-                console.log(response.data);
-                alert(response.data);
+                alert("User created successfully");
                 navigate("/signin");
             })
             .catch((e) => {
-                console.log(e.response.data);
                 alert(e.response.data);
             })
     };
