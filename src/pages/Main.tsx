@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
-import styled from "styled-components";
 import { BiLogOut } from "react-icons/bi";
 
 import { useAppSelector } from "../redux/hook";
@@ -20,8 +19,6 @@ function Main() {
     const postList = useAppSelector((state) => state.postListReducer.postList);
     const page = useAppSelector((state) => state.postListReducer.page);
     const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
-
-    const decodedToken = networkRequests.returnDecodedToken(localStorageToken);
 
     const [isOpenLogOut, setIsOpenLogOut] = useState(false);
 

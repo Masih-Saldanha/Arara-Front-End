@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 
 import { useAppSelector } from "../redux/hook";
 import { editComment } from "../redux/postSlice";
@@ -41,72 +40,25 @@ function PostSquare() {
     };
 
     return (
-        <PostArticle>
+        <article className="border border-1px-solid-999999 rounded p-3 m-4">
             <form onSubmit={handleSubmit}>
-                <h2>What’s on your mind?</h2>
+                <h2 className="mb-3">What’s on your mind?</h2>
                 <textarea
+                    className="form-control border border-1px-solid-777777 mb-3 textarea-no-resize"
                     placeholder="Comment here"
                     value={commentText}
                     onChange={handleContent}
                 ></textarea>
-                <ButtonBox>
+                <div className="d-flex justify-content-end">
                     <button
+                        className="btn btn-primary"
                         type="submit"
                         disabled={postButtonDisabled}
                     >Create</button>
-                </ButtonBox>
+                </div>
             </form>
-        </PostArticle>
+        </article>
     )
 };
-
-const PostArticle = styled.article`
-    border: 1px solid #999999;
-    border-radius: 16px;
-    padding: 24px;
-    margin: 24px;
-    form {
-        h2 {
-            margin-bottom: 24px;
-        }
-        h3 {
-            margin-bottom: 8px;
-        }
-        input {
-            border: 1px solid #777777;
-            margin-bottom: 24px;
-            font-size: 14px;
-        }
-        input::placeholder {
-            font-size: 14px;
-            color: #CCCCCC;
-        }
-        textarea {
-            resize: none;
-            width: 100%;
-            height: 74px;
-            border-radius: 8px;
-            border: 1px solid #777777;
-            margin-bottom: 24px;
-            padding: 8px;
-            font-size: 14px;
-        }
-        textarea::placeholder {
-            font-size: 14px;
-            color: #CCCCCC;
-        }
-    }
-`
-
-const ButtonBox = styled.div`
-    display: flex;
-    justify-content: end;
-    /* button {
-        color: #FFFFFF;
-        :hover {
-            color: white;
-        }
-    } */
-`
 
 export default PostSquare;
