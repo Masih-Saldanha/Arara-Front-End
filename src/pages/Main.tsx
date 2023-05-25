@@ -12,21 +12,16 @@ import networkRequests from "../actions/networkRequests";
 import PostSquare from "../components/PostSquare";
 import PostModel from "../components/PostModel";
 import Loading from "../components/Loading";
-import { editSignUpUsername } from "../redux/signUpSlice";
 import { unstoreToken } from "../redux/signInSlice";
-
-
 
 function Main() {
     const navigate = useNavigate();
 
-    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
     const postList = useAppSelector((state) => state.postListReducer.postList);
     const page = useAppSelector((state) => state.postListReducer.page);
-
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
+    
     const decodedToken = networkRequests.returnDecodedToken(localStorageToken);
-
-    console.log("decodedToken", decodedToken);
 
     const [isOpenLogOut, setIsOpenLogOut] = useState(false);
 
@@ -36,14 +31,13 @@ function Main() {
 
     useEffect(() => {
         if (localStorageToken === null) {
-            navigate("/signup");
+            navigate("/signin");
             return;
         };
-        dispatch(editSignUpUsername(localStorageToken));
         networkRequests
-            .getPosts(0)
+            .getPosts(0, localStorageToken)
             .then((response) => {
-                dispatch(getFreshPosts(response.data.results));
+                dispatch(getFreshPosts(response.data));
             })
             .catch((e) => {
                 alert("could not retrieve new posts");
@@ -52,7 +46,7 @@ function Main() {
 
     function fetchMoreData() {
         networkRequests
-            .getPosts(page)
+            .getPosts(page, localStorageToken)
             .then((response) => {
                 dispatch(getMorePosts(response.data.results));
             })
@@ -67,8 +61,7 @@ function Main() {
 
     function logOut() {
         dispatch(unstoreToken());
-        dispatch(editSignUpUsername(""));
-        navigate("/signup");
+        navigate("/signin");
     };
 
     function showPosts() {
@@ -80,15 +73,15 @@ function Main() {
                 loader={<Loading message="Loading more posts..."></Loading>}
             >
                 {postList.map((post) => {
-                    const { id, title, username, created_datetime, content } = post;
+                    const { id, userId, users, createdAt, comment } = post;
                     return (
                         <PostModel
                             key={id}
-                            postId={id}
-                            title={title}
-                            username={username}
-                            created_datetime={created_datetime}
-                            content={content}
+                            id={id}
+                            userId={userId}
+                            users={users}
+                            createdAt={createdAt}
+                            comment={comment}
                         ></PostModel>
                     )
                 })}
@@ -119,7 +112,7 @@ function Main() {
                             <aside>
                                 <aside>
                                     <CancelLogOut onClick={toggleModalLogOut}>Cancel</CancelLogOut>
-                                    <ConfirmLogOut onClick={logOut}>Delete</ConfirmLogOut>
+                                    <ConfirmLogOut onClick={logOut}>Logout</ConfirmLogOut>
                                 </aside>
                             </aside>
                         </>

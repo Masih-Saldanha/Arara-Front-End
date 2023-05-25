@@ -7,22 +7,22 @@ import styled from "styled-components";
 import { useAppSelector } from "../redux/hook";
 import networkRequests from "../actions/networkRequests";
 import { getFreshPosts } from "../redux/postListSlice";
+import Loading from "./Loading";
 import trash from "../assets/trash.svg";
 import edit from "../assets/edit.svg";
-import Loading from "./Loading";
 
-function PostModel(props: { postId: number; title: any; username: any; created_datetime: any; content: any; }) {
-    const { postId, title, username, created_datetime, content } = props;
+function PostModel(props: { id: number; userId: number; users: {username: string}; createdAt: any; comment: string; }) {
+    const { id, userId, users, createdAt, comment } = props;
 
-    const signUpText = useAppSelector((state) => state.signUpReducer.signUpText);
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
+    const decodedToken = networkRequests.returnDecodedToken(localStorageToken);
 
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [editing, setEditing] = useState(false);
     const [editData, setEditData] = useState({
-        title: "",
-        content: "",
+        comment: "",
     });
 
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
     Modal.setAppElement("#root");
 
     const now = dayjs(Date());
-    const date = dayjs(created_datetime);
+    const date = dayjs(createdAt);
 
     const minutes = now.diff(date, "minute");
     const hours = now.diff(date, "hour");
@@ -63,22 +63,22 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
     function deletePost() {
         setDeleting(true);
         networkRequests
-            .deletePost(postId)
+            .deletePost(id, localStorageToken)
             .then((response) => {
                 networkRequests
-                    .getPosts(0)
+                    .getPosts(0, localStorageToken)
                     .then((response) => {
                         setDeleting(false);
-                        dispatch(getFreshPosts(response.data.results));
+                        dispatch(getFreshPosts(response.data));
                     })
                     .catch((e) => {
                         setDeleting(false);
-                        alert("could not retrieve new posts");
+                        alert("could not retrieve new comments");
                     });
             })
             .catch((e) => {
                 setDeleting(false);
-                alert("could not delete your post");
+                alert("could not delete your comment");
             });
     }
 
@@ -93,15 +93,15 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
     function editPost() {
         setEditing(true);
         networkRequests
-            .editPost(postId, editData.title, editData.content)
+            .editPost(editData.comment, userId, id, localStorageToken)
             .then((response) => {
                 networkRequests
-                    .getPosts(0)
+                    .getPosts(0, localStorageToken)
                     .then((response) => {
                         setEditing(false);
-                        dispatch(getFreshPosts(response.data.results));
+                        dispatch(getFreshPosts(response.data));
                         toggleModalEdit();
-                        setEditData({ title: "", content: "" });
+                        setEditData({ comment: "" });
                     })
                     .catch((e) => {
                         setEditing(false);
@@ -117,9 +117,8 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
     return (
         <PostDiv>
             <TopBar>
-                <h1>{title}</h1>
                 {
-                    signUpText === username ?
+                    decodedToken.username === users.username ?
                         <div>
                             <DeleteButton src={trash} onClick={toggleModalDelete}></DeleteButton>
                             <Modal
@@ -167,18 +166,11 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
                                     !editing ?
                                         <>
                                             <h2>Edit item</h2>
-                                            <h3>Title</h3>
-                                            <input
-                                                type="text"
-                                                placeholder="Hello world"
-                                                value={editData.title}
-                                                onChange={(e) => handleEditInputs(e, "title")}
-                                            ></input>
-                                            <h3>Content</h3>
+                                            <h3>Comment</h3>
                                             <textarea
-                                                placeholder="Content here"
-                                                value={editData.content}
-                                                onChange={(e) => handleEditInputs(e, "content")}
+                                                placeholder="Comment here"
+                                                value={editData.comment}
+                                                onChange={(e) => handleEditInputs(e, "comment")}
                                             ></textarea>
                                             <aside>
                                                 <aside>
@@ -197,10 +189,10 @@ function PostModel(props: { postId: number; title: any; username: any; created_d
                 }
             </TopBar>
             <UserDataBar>
-                <h5>{username}</h5>
+                <h5>{users.username}</h5>
                 <h5>{dateString}</h5>
             </UserDataBar>
-            <p>{content}</p>
+            <p>{comment}</p>
         </PostDiv>
     )
 };

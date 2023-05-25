@@ -9,16 +9,15 @@ import networkRequests from "../actions/networkRequests";
 function SignUpSquare() {
     const navigate = useNavigate();
 
-    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
     const signUpUsername = useAppSelector((state) => state.signUpReducer.signUpUsername);
     const signUpPassword = useAppSelector((state) => state.signUpReducer.signUpPassword);
     const loading = useAppSelector((state) => state.signUpReducer.loading);
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (localStorageToken !== null) {
-            // dispatch(editSignUpUsername(localStorageToken));
             navigate("/main");
             return;
         }
@@ -34,7 +33,6 @@ function SignUpSquare() {
 
     function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
-        // dispatch(storeToken(signUpUsername));
         networkRequests
             .signUp(signUpUsername, signUpPassword)
             .then((response) => {
@@ -46,7 +44,6 @@ function SignUpSquare() {
                 console.log(e.response.data);
                 alert(e.response.data);
             })
-        // navigate("/main");
     };
 
     return (

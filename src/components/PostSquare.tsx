@@ -3,45 +3,40 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import { useAppSelector } from "../redux/hook";
-import { editTitle, editContent } from "../redux/postSlice";
+import { editComment } from "../redux/postSlice";
 import { getFreshPosts } from "../redux/postListSlice";
 import networkRequests from "../actions/networkRequests";
 
 function PostSquare() {
-    const signUpText = useAppSelector((state) => state.signUpReducer.signUpText);
-    const titleText = useAppSelector((state) => state.postReducer.titleText);
-    const contentText = useAppSelector((state) => state.postReducer.contentText);
+    const commentText = useAppSelector((state) => state.postReducer.commentText);
     const postButtonDisabled = useAppSelector((state) => state.postReducer.postButtonDisabled);
-    const postButtonColor = useAppSelector((state) => state.postReducer.postButtonColor);
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
+
+    const decodedToken = networkRequests.returnDecodedToken(localStorageToken);
 
     const dispatch = useDispatch();
 
-    function handleTitle(e: { target: { value: any; }; }) {
-        dispatch(editTitle(e.target.value));
-    };
-
     function handleContent(e: { target: { value: any; }; }) {
-        dispatch(editContent(e.target.value));
+        dispatch(editComment(e.target.value));
     };
 
     function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
         networkRequests
-            .postText(signUpText, titleText, contentText)
+            .postText(commentText, decodedToken.id, localStorageToken)
             .then((response) => {
                 networkRequests
-                    .getPosts(0)
+                    .getPosts(0, localStorageToken)
                     .then((response) => {
-                        dispatch(getFreshPosts(response.data.results));
-                        dispatch(editTitle(""));
-                        dispatch(editContent(""));
+                        dispatch(getFreshPosts(response.data));
+                        dispatch(editComment(""));
                     })
                     .catch((e) => {
-                        alert("could not retrieve new posts");
+                        alert("could not retrieve new comments");
                     });
             })
             .catch((e) => {
-                alert("could not send your post");
+                alert("could not send your comment");
             });
     };
 
@@ -49,23 +44,14 @@ function PostSquare() {
         <PostArticle>
             <form onSubmit={handleSubmit}>
                 <h2>What’s on your mind?</h2>
-                <h3>Title</h3>
-                <input
-                    type="text"
-                    placeholder="Hello world"
-                    value={titleText}
-                    onChange={handleTitle}
-                ></input>
-                <h3>Content</h3>
                 <textarea
                     placeholder="Content here"
-                    value={contentText}
+                    value={commentText}
                     onChange={handleContent}
                 ></textarea>
                 <ButtonBox>
                     <button
                         type="submit"
-                        color={postButtonColor}
                         disabled={postButtonDisabled}
                     >Create</button>
                 </ButtonBox>
@@ -116,7 +102,7 @@ const ButtonBox = styled.div`
     display: flex;
     justify-content: end;
     button {
-        background-color: ${(props: { children: { props: { color: any; }; }; }) => props.children.props.color};
+        /* background-color: ${(props: { children: { props: { color: any; }; }; }) => props.children.props.color}; */
         color: #FFFFFF;
         :hover {
             background-color: ${(props) => props.children.props.disabled === true ? "" : "green"};

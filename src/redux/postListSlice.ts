@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface Post {
     id: number;
-    title: string;
-    username: string;
-    created_datetime: string;
-    content: string;
+    userId: number;
+    users: { username: string };
+    createdAt: string;
+    comment: string;
 };
 
 interface PostListState {
@@ -15,7 +15,7 @@ interface PostListState {
 
 const initialState: PostListState = {
     postList: [],
-    page: 1,
+    page: 0,
 };
 
 export const postListSlice = createSlice({
@@ -24,7 +24,7 @@ export const postListSlice = createSlice({
     reducers: {
         getFreshPosts: (state, action) => {
             state.postList = action.payload;
-            state.page = 1;
+            state.page = 0;
         },
         getMorePosts: (state, action) => {
             const arrayPayload: Post[] = [...action.payload];

@@ -11,7 +11,7 @@ function getAxiosConfig(token: string) {
     };
 };
 
-function returnDecodedToken(token: string) {
+function returnDecodedToken(token: string): { iat: number, id: number, username: string } {
     if (!token) {
         return null
     };
@@ -31,7 +31,7 @@ function postText(comment: string, userId: number, token: string) {
     return axios.post(`${BASE_URL}/comment/register`, { comment, userId }, config);
 };
 
-function editPost(comment: string, userId: string, commentId: string, token: string) {
+function editPost(comment: string, userId: number, commentId: number, token: string) {
     const config = getAxiosConfig(token);
     return axios.put(`${BASE_URL}/comment/edit`, { comment, userId, commentId }, config);
 };

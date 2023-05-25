@@ -9,16 +9,15 @@ import networkRequests from "../actions/networkRequests";
 function SignInSquare() {
     const navigate = useNavigate();
 
-    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
     const signInUsername = useAppSelector((state) => state.signInReducer.signInUsername);
     const signInPassword = useAppSelector((state) => state.signInReducer.signInPassword);
     const loading = useAppSelector((state) => state.signInReducer.loading);
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (localStorageToken !== null) {
-            // dispatch(editSignUpUsername(localStorageToken));
             navigate("/main");
             return;
         }
@@ -40,12 +39,12 @@ function SignInSquare() {
                 dispatch(storeToken(response.data));
                 console.log(response.data);
                 alert(response.data);
+                navigate("/main");
             })
             .catch((e) => {
                 console.log(e.response.data);
                 alert(e.response.data);
             })
-        // navigate("/main");
     };
 
     return (
