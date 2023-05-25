@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "../redux/hook";
-import { editSignUpPassword, editSignUpUsername } from "../redux/signUpSlice";
+import { editSignInPassword, editSignInUsername, storeToken } from "../redux/signInSlice";
 import networkRequests from "../actions/networkRequests";
 
-function SignUpSquare() {
+function SignInSquare() {
     const navigate = useNavigate();
 
     const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
-    const signUpUsername = useAppSelector((state) => state.signUpReducer.signUpUsername);
-    const signUpPassword = useAppSelector((state) => state.signUpReducer.signUpPassword);
-    const loading = useAppSelector((state) => state.signUpReducer.loading);
+    const signInUsername = useAppSelector((state) => state.signInReducer.signInUsername);
+    const signInPassword = useAppSelector((state) => state.signInReducer.signInPassword);
+    const loading = useAppSelector((state) => state.signInReducer.loading);
 
     const dispatch = useDispatch();
 
@@ -24,23 +24,22 @@ function SignUpSquare() {
         }
     }, [])
 
-    function handleSignUpUsername(e: { target: { value: any; }; }) {
-        dispatch(editSignUpUsername(e.target.value));
+    function handleSignInUsername(e: { target: { value: any; }; }) {
+        dispatch(editSignInUsername(e.target.value));
     };
 
-    function handleSignUpPassword(e: { target: { value: any; }; }) {
-        dispatch(editSignUpPassword(e.target.value));
+    function handleSignInPassword(e: { target: { value: any; }; }) {
+        dispatch(editSignInPassword(e.target.value));
     };
 
     function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
-        // dispatch(storeToken(signUpUsername));
         networkRequests
-            .signUp(signUpUsername, signUpPassword)
+            .signIn(signInUsername, signInPassword)
             .then((response) => {
+                dispatch(storeToken(response.data));
                 console.log(response.data);
                 alert(response.data);
-                navigate("/signin");
             })
             .catch((e) => {
                 console.log(e.response.data);
@@ -58,16 +57,16 @@ function SignUpSquare() {
                     className="form-control mb-3"
                     type="text"
                     placeholder="Username"
-                    value={signUpUsername}
-                    onChange={handleSignUpUsername}
+                    value={signInUsername}
+                    onChange={handleSignInUsername}
                 ></input>
                 <h3 className="mb-3">Password:</h3>
                 <input
                     className="form-control mb-3"
                     type="password"
                     placeholder="Password"
-                    value={signUpPassword}
-                    onChange={handleSignUpPassword}
+                    value={signInPassword}
+                    onChange={handleSignInPassword}
                 ></input>
                 <div className="d-flex justify-content-center mt-2">
                     <button
@@ -78,12 +77,12 @@ function SignUpSquare() {
                         aria-selected="true"
                         type="submit"
                         disabled={loading}
-                    >Sign Up</button>
+                    >Sign In</button>
                 </div>
             </form>
-            <h4 onClick={() => navigate("/signin")} className="text-center mt-3">Already registered? Sign In here!</h4>
+            <h4 onClick={() => navigate("/signup")} className="text-center mt-3">Don't have an account yet? Sign Up here!</h4>
         </main>
     )
 };
 
-export default SignUpSquare;
+export default SignInSquare;

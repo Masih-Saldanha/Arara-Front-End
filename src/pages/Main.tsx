@@ -12,16 +12,21 @@ import networkRequests from "../actions/networkRequests";
 import PostSquare from "../components/PostSquare";
 import PostModel from "../components/PostModel";
 import Loading from "../components/Loading";
-import { editSignUpUsername, unstoreToken } from "../redux/signUpSlice";
+import { editSignUpUsername } from "../redux/signUpSlice";
+import { unstoreToken } from "../redux/signInSlice";
 
 
 
 function Main() {
     const navigate = useNavigate();
 
-    const localStorageUser = useAppSelector((state) => state.signUpReducer.localStorageToken);
+    const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
     const postList = useAppSelector((state) => state.postListReducer.postList);
     const page = useAppSelector((state) => state.postListReducer.page);
+
+    const decodedToken = networkRequests.returnDecodedToken(localStorageToken);
+
+    console.log("decodedToken", decodedToken);
 
     const [isOpenLogOut, setIsOpenLogOut] = useState(false);
 
@@ -30,11 +35,11 @@ function Main() {
     Modal.setAppElement("#root");
 
     useEffect(() => {
-        if (localStorageUser === null) {
+        if (localStorageToken === null) {
             navigate("/signup");
             return;
         };
-        dispatch(editSignUpUsername(localStorageUser));
+        dispatch(editSignUpUsername(localStorageToken));
         networkRequests
             .getPosts(0)
             .then((response) => {
