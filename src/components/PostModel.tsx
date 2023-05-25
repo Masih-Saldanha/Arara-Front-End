@@ -136,7 +136,7 @@ function PostModel(props: { id: number; userId: number; users: {username: string
                                 {
                                     !deleting ?
                                         <>
-                                            <h2>Are you sure you want to delete this item?</h2>
+                                            <h2>Are you sure you want to delete this comment?</h2>
                                             <aside>
                                                 <aside>
                                                     <CancelDelete onClick={toggleModalDelete}>Cancel</CancelDelete>
@@ -165,8 +165,7 @@ function PostModel(props: { id: number; userId: number; users: {username: string
                                 {
                                     !editing ?
                                         <>
-                                            <h2>Edit item</h2>
-                                            <h3>Comment</h3>
+                                            <h2>Edit comment</h2>
                                             <textarea
                                                 placeholder="Comment here"
                                                 value={editData.comment}

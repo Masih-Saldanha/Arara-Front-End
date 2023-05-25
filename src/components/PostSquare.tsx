@@ -45,7 +45,7 @@ function PostSquare() {
             <form onSubmit={handleSubmit}>
                 <h2>What’s on your mind?</h2>
                 <textarea
-                    placeholder="Content here"
+                    placeholder="Comment here"
                     value={commentText}
                     onChange={handleContent}
                 ></textarea>
@@ -101,14 +101,12 @@ const PostArticle = styled.article`
 const ButtonBox = styled.div`
     display: flex;
     justify-content: end;
-    button {
-        /* background-color: ${(props: { children: { props: { color: any; }; }; }) => props.children.props.color}; */
+    /* button {
         color: #FFFFFF;
         :hover {
-            background-color: ${(props) => props.children.props.disabled === true ? "" : "green"};
             color: white;
         }
-    }
+    } */
 `
 
 export default PostSquare;
