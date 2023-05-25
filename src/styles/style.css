@@ -38,6 +38,14 @@ h4 {
   resize: none;
 }
 
+.w-70-pixels {
+  width: 70px;
+}
+
+.text-color-white {
+  color: white;
+}
+
 /* button {
   border: none;
   border-radius: 8px;

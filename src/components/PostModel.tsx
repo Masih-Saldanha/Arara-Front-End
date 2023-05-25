@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import styled from "styled-components";
+import { BiTrash } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 
 import { useAppSelector } from "../redux/hook";
 import networkRequests from "../actions/networkRequests";
 import { getFreshPosts } from "../redux/postListSlice";
 import Loading from "./Loading";
-import trash from "../assets/trash.svg";
-import edit from "../assets/edit.svg";
 
-function PostModel(props: { id: number; userId: number; users: {username: string}; createdAt: any; comment: string; }) {
+function PostModel(props: { id: number; userId: number; users: { username: string }; createdAt: any; comment: string; }) {
     const { id, userId, users, createdAt, comment } = props;
 
     const localStorageToken = useAppSelector((state) => state.signInReducer.localStorageToken);
@@ -115,219 +114,84 @@ function PostModel(props: { id: number; userId: number; users: {username: string
     };
 
     return (
-        <PostDiv>
-            <TopBar>
+        <div className="border-1px-solid-999999 border rounded mb-3 mx-3">
+            <div className="bg-primary rounded-top p-3 d-flex justify-content-between align-items-center">
+                <div className="text-color-white d-flex justify-content-between w-100">
+                    <h5>{users.username}</h5>
+                    <h5 style={{ marginLeft: "16px" }}>{dateString}</h5>
+                </div>
                 {
                     decodedToken.username === users.username ?
-                        <div>
-                            <DeleteButton src={trash} onClick={toggleModalDelete}></DeleteButton>
+                        <div className="w-70-pixels d-flex justify-content-between" style={{ marginLeft: "16px" }}>
+                            <BiTrash size={25} color="white" onClick={toggleModalDelete}></BiTrash>
                             <Modal
                                 isOpen={isOpenDelete}
                                 onRequestClose={toggleModalDelete}
-                                className="_"
-                                overlayClassName="_"
-                                contentElement={(props, children) => (
-                                    <DeleteModalStyle {...props}>{children}</DeleteModalStyle>
-                                )}
-                                overlayElement={(props, contentElement) => (
-                                    <DeleteOverlayStyle {...props}>{contentElement}</DeleteOverlayStyle>
-                                )}
+                                className="modal-dialog"
+                                overlayClassName="position-fixed d-flex justify-content-center align-items-center top-0 left-0 right-0 bottom-0 w-100"
+                                style={{ overlay: { zIndex: 3500, backgroundColor: "rgba(119, 119, 119, 0.8)" } }}
                             >
                                 {
                                     !deleting ?
-                                        <>
-                                            <h2>Are you sure you want to delete this comment?</h2>
-                                            <aside>
-                                                <aside>
-                                                    <CancelDelete onClick={toggleModalDelete}>Cancel</CancelDelete>
-                                                    <ConfirmDelete onClick={deletePost}>Delete</ConfirmDelete>
-                                                </aside>
-                                            </aside>
-                                        </>
+                                        <div className="modal-content bg-white border rounded p-2">
+                                            <div className="modal-body p-2">
+                                                <h2 className="modal-title">Are you sure you want to delete this comment?</h2>
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary m-2" onClick={toggleModalDelete}>Cancel</button>
+                                                <button type="button" className="btn btn-danger m-2" onClick={deletePost}>Delete</button>
+                                            </div>
+                                        </div>
                                         :
-                                        <Loading message="Deleting"></Loading>
+                                        <div className="modal-content bg-white border rounded p-2">
+                                            <div className="modal-body p-2">
+                                                <Loading message="Deleting"></Loading>
+                                            </div>
+                                        </div>
                                 }
                             </Modal>
 
-                            <EditButton src={edit} onClick={toggleModalEdit}></EditButton>
+                            <BiEdit size={25} color="white" onClick={toggleModalEdit}></BiEdit>
                             <Modal
                                 isOpen={isOpenEdit}
                                 onRequestClose={toggleModalEdit}
-                                className="_"
-                                overlayClassName="_"
-                                contentElement={(props, children) => (
-                                    <DeleteModalStyle {...props}>{children}</DeleteModalStyle>
-                                )}
-                                overlayElement={(props, contentElement) => (
-                                    <DeleteOverlayStyle {...props}>{contentElement}</DeleteOverlayStyle>
-                                )}
+                                className="modal-dialog w-75"
+                                overlayClassName="position-fixed d-flex justify-content-center align-items-center top-0 left-0 right-0 bottom-0 w-100"
+                                style={{ overlay: { zIndex: 3500, backgroundColor: "rgba(119, 119, 119, 0.8)" } }}
                             >
                                 {
                                     !editing ?
-                                        <>
-                                            <h2>Edit comment</h2>
-                                            <textarea
-                                                placeholder="Comment here"
-                                                value={editData.comment}
-                                                onChange={(e) => handleEditInputs(e, "comment")}
-                                            ></textarea>
-                                            <aside>
-                                                <aside>
-                                                    <CancelDelete onClick={toggleModalEdit}>Cancel</CancelDelete>
-                                                    <ConfirmEdit onClick={editPost}>Save</ConfirmEdit>
-                                                </aside>
-                                            </aside>
-                                        </>
+                                        <div className="modal-content bg-white border rounded p-2">
+                                            <div className="modal-body p-2">
+                                                <h2 className="modal-title">Edit comment</h2>
+                                                <textarea
+                                                    className="form-control border border-1px-solid-777777 textarea-no-resize"
+                                                    placeholder="Comment here"
+                                                    value={editData.comment}
+                                                    onChange={(e) => handleEditInputs(e, "comment")}
+                                                ></textarea>
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button className="btn btn-secondary m-2" onClick={toggleModalEdit}>Cancel</button>
+                                                <button className="btn btn-primary m-2" onClick={editPost} disabled={!editData.comment}>Save</button>
+                                            </div>
+                                        </div>
                                         :
-                                        <Loading message="Editing"></Loading>
+                                        <div className="modal-content bg-white border rounded p-2">
+                                            <div className="modal-body p-2">
+                                                <Loading message="Editing"></Loading>
+                                            </div>
+                                        </div>
                                 }
                             </Modal>
                         </div>
                         :
                         <></>
                 }
-            </TopBar>
-            <UserDataBar>
-                <h5>{users.username}</h5>
-                <h5>{dateString}</h5>
-            </UserDataBar>
-            <p>{comment}</p>
-        </PostDiv>
+            </div>
+            <p className="p-3">{comment}</p>
+        </div>
     )
 };
-
-const PostDiv = styled.div`
-    border: 1px solid #999999;
-    border-radius: 16px;
-    margin: 0 24px 24px 24px;
-    p {
-        padding: 0 24px 24px 24px;
-    }
-`
-
-const TopBar = styled.div`
-    background-color: #7695EC;
-    border-radius: 16px 16px 0px 0px;
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    div {
-        width: 86px;
-        display: flex;
-        justify-content: space-between;
-        img {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-        }
-    }
-`
-
-const DeleteButton = styled.img`
-    :hover {
-        background-color: red;
-    }
-`
-
-const EditButton = styled.img`
-    :hover {
-        background-color: green;
-    }
-`
-
-const UserDataBar = styled.div`
-    padding: 24px 24px 16px 24px;
-    color: #777777;
-    display: flex;
-    justify-content: space-between;
-`
-
-const DeleteModalStyle = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #FFFFFF;
-    border-radius: 16px;
-    border: 1px solid #999999;
-    width: 660px;
-    height: auto;
-    padding: 24px;
-    h3 {
-        padding: 24px 0 8px 0;
-    }
-    input {
-        border: 1px solid #777777;
-        font-size: 14px;
-    }
-    input::placeholder {
-        font-size: 14px;
-        color: #CCCCCC;
-    }
-    textarea {
-        resize: none;
-        width: 100%;
-        height: 74px;
-        border-radius: 8px;
-        border: 1px solid #777777;
-        padding: 8px;
-        font-size: 14px;
-    }
-    textarea::placeholder {
-        font-size: 14px;
-        color: #CCCCCC;
-    }
-    aside{
-        width: 100%;
-        display: flex;
-        justify-content: end;
-        padding-top: 12px;
-        aside {
-            width: 256px;
-            display: flex;
-            justify-content: space-between;
-        }
-    }
-`
-
-const DeleteOverlayStyle = styled.div`
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 3500;
-    background: rgba(119, 119, 119, 0.8);
-`
-
-const CancelDelete = styled.button`
-    background-color: #FFFFFF;
-    border: 1px solid #999999;
-    :hover {
-        background-color: red;
-        color: white;
-    }
-`
-
-const ConfirmDelete = styled.button`
-    background-color: #FF5151;
-    color: #FFFFFF;
-    :hover {
-        background-color: red;
-        color: white;
-    }
-`
-
-const ConfirmEdit = styled.button`
-    background-color: #47B960;
-    color: #FFFFFF;
-    :hover {
-        background-color: green;
-        color: white;
-    }
-`
 
 export default PostModel;

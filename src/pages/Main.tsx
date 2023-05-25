@@ -105,7 +105,7 @@ function Main() {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary m-2" onClick={toggleModalLogOut}>Cancel</button>
-                                <button type="button" className="btn btn-primary m-2" onClick={logOut}>Logout</button>
+                                <button type="button" className="btn btn-danger m-2" onClick={logOut}>Logout</button>
                             </div>
                         </div>
                     </Modal>
