@@ -26,6 +26,8 @@ function Main() {
 
     Modal.setAppElement("#root");
 
+    const seconds = 10;
+    const miliseconds = 1000;
     useEffect(() => {
         if (localStorageToken === null) {
             navigate("/signin");
@@ -39,13 +41,32 @@ function Main() {
             .catch((e) => {
                 alert("could not retrieve new posts");
             })
-    }, []);
+
+        const timer = setInterval(() => {
+            networkRequests
+                .getPosts(0, localStorageToken)
+                .then((response) => {
+                    const firstCommentIdResponse = { ...response.data[0] }.id;
+                    const firstCommentIdPostList = { ...postList[0] }.id;
+
+                    const comparison = firstCommentIdResponse !== firstCommentIdPostList;
+                    if (comparison && postList.length > 0) {
+                        dispatch(getFreshPosts(response.data))
+                    }
+                })
+                .catch((e) => {
+                    alert("could not retrieve new posts");
+                })
+        }, seconds * miliseconds);
+        return () => clearInterval(timer);
+        
+    }, [!postList[0] || postList[0].id]);
 
     function fetchMoreData() {
         networkRequests
             .getPosts(page, localStorageToken)
             .then((response) => {
-                dispatch(getMorePosts(response.data.results));
+                dispatch(getMorePosts(response.data));
             })
             .catch((e) => {
                 alert("could not retrieve new posts");
