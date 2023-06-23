@@ -30,10 +30,10 @@ export const postListSlice = createSlice({
         getMorePosts: (state, action) => {
             state.page += 1;
             const arrayPayload: Post[] = [...action.payload];
-            const arrayLastTenPostList: Post[] = [...state.postList];
+            const arrayPostList: Post[] = [...state.postList];
 
             const uniquePosts = arrayPayload.filter((post) => {
-                return !arrayLastTenPostList.some((lastPost) => lastPost.id === post.id);
+                return !arrayPostList.some((lastPost) => lastPost.id === post.id);
             });
 
             state.postList = [...state.postList, ...uniquePosts];
