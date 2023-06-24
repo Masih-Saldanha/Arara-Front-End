@@ -1,7 +1,7 @@
 {
-  "name": "arara-front-end",
+  "name": "certi-amazonia-chat-front-end",
   "version": "1.0.0",
-  "description": "Front-end layer of the Arara Chat App",
+  "description": "Front-end layer of the Certi Amazônia Chat App",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",

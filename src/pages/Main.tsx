@@ -111,7 +111,7 @@ function Main() {
         <main className="d-flex flex-column justify-content-center">
             <section className="bg-white max-width-800 width-100">
                 <header className="d-flex justify-content-between bg-primary px-4 py-3 align-items-center">
-                    <h1>Arara</h1>
+                    <h1>Certi Amazônia Chat</h1>
                     <BiLogOut size={30} onClick={toggleModalLogOut} className="text-white rounded-circle cursor-pointer" />
                     <Modal
                         isOpen={isOpenLogOut}

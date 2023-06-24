@@ -8,7 +8,7 @@ interface SignInState {
 };
 
 const initialState: SignInState = {
-    localStorageToken: localStorage.getItem("araraToken"),
+    localStorageToken: localStorage.getItem("certiToken"),
     signInUsername: "",
     signInPassword: "",
     loading: true,
@@ -37,7 +37,7 @@ export const signInSlice = createSlice({
         storeToken: (state, action) => {
             editSignInUsername(action.payload);
             state.localStorageToken = action.payload;
-            localStorage.setItem("araraToken", action.payload);
+            localStorage.setItem("certiToken", action.payload);
         },
         unstoreToken: (state) => {
             state.localStorageToken = null;
